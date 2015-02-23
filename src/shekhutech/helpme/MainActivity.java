@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
     private float mAccelCurrent; // current acceleration including gravity
     private float mAccelLast; // last acceleration including gravity
     private String locationProvider = null;
-    private Location lastKnownLocation = null;
+    //private Location lastKnownLocation = null;
     private LocationManager locationManager = null;
     private LocationListener locationListener = null;
     private ImageButton imgPanicBtn = null;
@@ -43,12 +43,13 @@ public class MainActivity extends Activity {
     private TextView txtLocation = null;
     private final SensorEventListener mSensorListener = new SensorEventListener() {
 
-        public void onSensorChanged(SensorEvent se) {
+        @Override
+		public void onSensorChanged(SensorEvent se) {
             float x = se.values[0];
             float y = se.values[1];
             float z = se.values[2];
             mAccelLast = mAccelCurrent;
-            mAccelCurrent = (float) Math.sqrt((double) (x*x + y*y + z*z));
+            mAccelCurrent = (float) Math.sqrt(x*x + y*y + z*z);
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta; // perform low-cut filter
             if (mAccel > 12) 
@@ -59,7 +60,8 @@ public class MainActivity extends Activity {
                 mSensorManager.unregisterListener(this);
             }
         }
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        @Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
         	
         }
     };
@@ -81,7 +83,7 @@ public class MainActivity extends Activity {
         // get location service to location Manager
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         // get last known location from cache to show initial location while app is fetching location
-        lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+        //lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
         //detect shake
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
