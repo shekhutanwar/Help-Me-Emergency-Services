@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -50,13 +51,16 @@ public class MainActivity extends Activity {
             mAccelCurrent = (float) Math.sqrt((double) (x*x + y*y + z*z));
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta; // perform low-cut filter
-            if (mAccel > 12) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Device has shaken.", Toast.LENGTH_SHORT);
+            if (mAccel > 12) 
+            {
+                Toast toast = Toast.makeText(getApplicationContext(), "Device has shaken", Toast.LENGTH_SHORT);
                 toast.show();
                 startLocationListener(locationManager,locationListener);
+                mSensorManager.unregisterListener(this);
             }
         }
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        	
         }
     };
 
@@ -122,17 +126,15 @@ public class MainActivity extends Activity {
             }
         };
         // display last known location
-        Log.i("MainActivity","Last Known Location is " + "Latitude = " + lastKnownLocation.getLatitude() + "Longitude = " + lastKnownLocation.getLongitude());
-        Toast.makeText(MainActivity.this, "Getting Location, Check logcat for location coordinates", Toast.LENGTH_SHORT).show();
+        //txtLocation.setText((CharSequence) locationManager.getLastKnownLocation(locationProvider));
+        //Toast.makeText(MainActivity.this, "Getting Location, Check logcat for location coordinates", Toast.LENGTH_SHORT).show();
         // Set onClick listener to imgPanicButton
         imgPanicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // start location listener to receive location coordinates on button click
-                startLocationListener(locationManager,locationListener);
-                objectAnimator.start();
-
-                //relativeView.setBackgroundColor(getResources().getColor(R.color.red));
+            	objectAnimator.start();
+            	startLocationListener(locationManager,locationListener);
             }
         });
     }
@@ -145,7 +147,6 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onPause() {
-        mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
     }
 
